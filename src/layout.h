@@ -6,3 +6,6 @@
 #define CANVAS_WIDTH  64
 #define CANVAS_HEIGHT 64
 #define KEYBOARD      (CANVAS + CANVAS_WIDTH*CANVAS_HEIGHT)
+#define MOUSE_BTN     (KEYBOARD + 128)
+#define MOUSE_X       (MOUSE_BTN + 1)
+#define MOUSE_Y       (MOUSE_X + 1)

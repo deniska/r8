@@ -64,6 +64,7 @@ int main(int argc, char **argv)
 
     if (!build_rom_with_vasm(&cmd, EXAMPLES_FOLDER"checker.asm", BUILD_FOLDER EXAMPLES_FOLDER"checker.rom")) return 1;
     if (!build_rom_with_vasm(&cmd, EXAMPLES_FOLDER"box.asm", BUILD_FOLDER EXAMPLES_FOLDER"box.rom")) return 1;
+    if (!build_rom_with_vasm(&cmd, EXAMPLES_FOLDER"mouse.asm", BUILD_FOLDER EXAMPLES_FOLDER"mouse.rom")) return 1;
 
     cmd_append(&cmd, "cc");
     cmd_append(&cmd, "-I"BUILD_FOLDER);

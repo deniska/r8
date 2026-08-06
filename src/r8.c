@@ -141,6 +141,21 @@ int main(int argc, char **argv)
             UnloadDroppedFiles(files);
         }
 
+        float w  = GetScreenWidth();
+        float h  = GetScreenHeight();
+
+        Camera2D camera = {0};
+        camera.offset = (Vector2){w*0.5, h*0.5};
+        camera.target = (Vector2){
+            ui_box.x + ui_box.width*0.5,
+            ui_box.y + ui_box.height*0.5,
+        };
+        if (w/h < ui_box.width/ui_box.height) {
+            camera.zoom = w/ui_box.width;
+        } else {
+            camera.zoom = h/ui_box.height;
+        }
+
         if (!pause) {
             int emu_fps = MEMORY[FPS_CONFIG] & 31;
             if (emu_fps == 0) { emu_fps = DEFAULT_EMU_FPS; }
@@ -156,26 +171,28 @@ int main(int argc, char **argv)
                 MEMORY[KEYBOARD + '\n'] = IsKeyDown(KEY_ENTER);
                 MEMORY[KEYBOARD + 0x1B] = IsKeyDown(KEY_ESCAPE);
 
+                Vector2 mouse_pos = GetScreenToWorld2D(GetMousePosition(), camera);
+                int mouse_x = (int) mouse_pos.x;
+                int mouse_y = (int) mouse_pos.y;
+                int mouse_btn_state = (
+                    IsMouseButtonDown(MOUSE_BUTTON_LEFT)   << 0
+                  | IsMouseButtonDown(MOUSE_BUTTON_RIGHT)  << 1
+                  | IsMouseButtonDown(MOUSE_BUTTON_MIDDLE) << 2
+                );
+                if (mouse_x >= 0 && mouse_x < CANVAS_WIDTH && mouse_y >= 0 && mouse_y < CANVAS_HEIGHT) {
+                    MEMORY[MOUSE_BTN] = mouse_btn_state;
+                    MEMORY[MOUSE_X] = mouse_x;
+                    MEMORY[MOUSE_Y] = mouse_y;
+                }
+                if (mouse_btn_state == 0) {
+                    MEMORY[MOUSE_BTN] = mouse_btn_state;
+                }
+
                 call_vector(read16(UPDATE_VECTOR));
             }
         }
 
         UpdateTexture(canvas, MEMORY + CANVAS);
-
-        float w  = GetScreenWidth();
-        float h  = GetScreenHeight();
-
-        Camera2D camera = {0};
-        camera.offset = (Vector2){w*0.5, h*0.5};
-        camera.target = (Vector2){
-            ui_box.x + ui_box.width*0.5,
-            ui_box.y + ui_box.height*0.5,
-        };
-        if (w/h < ui_box.width/ui_box.height) {
-            camera.zoom = w/ui_box.width;
-        } else {
-            camera.zoom = h/ui_box.height;
-        }
 
         BeginDrawing(); {
             ClearBackground(GetColor(BACKGROUND_COLOR));
