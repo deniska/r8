@@ -27,16 +27,20 @@ update:
     beq .not_pressed
 
     jsr line_reset
-    ldx MOUSE_Y
+    ldy MOUSE_Y
 .loop:
-    dex
+    dey
     bmi .out
     jsr line_next
     jmp .loop
 .out
 
     ldy MOUSE_X
+    lda #$00
+    cpx #$01
+    bne .skip_set_white
     lda #$FF
+.skip_set_white:
     sta (LINE),Y
 .not_pressed:
     rts
