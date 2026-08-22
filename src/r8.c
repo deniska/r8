@@ -310,7 +310,7 @@ int main(int argc, char **argv)
     reload_rom(&rom, rom_path);
     call_vector(ENTRY_POINT);
 
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT);
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT | FLAG_WINDOW_HIGHDPI);
     InitWindow(800, 600, "r8");
     if (!IsWindowReady()) {
         TraceLog(LOG_ERROR, "Could not initialize the Window. See error messages above.");
@@ -362,8 +362,8 @@ int main(int argc, char **argv)
             UnloadDroppedFiles(files);
         }
 
-        float w  = GetScreenWidth();
-        float h  = GetScreenHeight();
+        float w  = GetRenderWidth();
+        float h  = GetRenderHeight();
 
         Camera2D camera = {0};
         camera.offset = (Vector2){w*0.5, h*0.5};
@@ -402,7 +402,7 @@ int main(int argc, char **argv)
                 MEMORY[KEYBOARD + '\n'] = IsKeyDown(KEY_ENTER);
                 MEMORY[KEYBOARD + 0x1B] = IsKeyDown(KEY_ESCAPE);
 
-                Vector2 mouse_pos = GetScreenToWorld2D(GetMousePosition(), camera);
+                Vector2 mouse_pos = GetScreenToWorld2D(GetMousePositionDPI(), camera);
                 int mouse_x = (int) mouse_pos.x;
                 int mouse_y = (int) mouse_pos.y;
                 int mouse_btn_state = (

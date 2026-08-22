@@ -5,6 +5,11 @@
 #define BUTTON_SHADE_COLOR BLACK
 #define BUTTON_RIM_COLOR   GRAY
 
+Vector2 GetMousePositionDPI(void)
+{
+    return Vector2Multiply(GetMousePosition(), GetWindowScaleDPI());
+}
+
 void box_merge(Rectangle *a, Rectangle b)
 {
     if (b.x < a->x) {
@@ -97,7 +102,7 @@ void reset_icon(Rectangle box)
 
 bool button(bool *down, Rectangle button_box, void (*icon)(Rectangle box), Camera2D camera)
 {
-    bool hover = CheckCollisionPointRec(GetScreenToWorld2D(GetMousePosition(), camera), button_box);
+    bool hover = CheckCollisionPointRec(GetScreenToWorld2D(GetMousePositionDPI(), camera), button_box);
     float unit = fminf(button_box.width, button_box.height);
     float thicc = 0.1*unit;
     Vector2 v1 = {button_box.x, button_box.y};
